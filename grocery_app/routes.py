@@ -23,6 +23,7 @@ def homepage():
 
 
 @main.route('/new_store', methods=['GET', 'POST'])
+@login_required
 def new_store():
     form = GroceryStoreForm()
     form_valid = form.validate_on_submit()
@@ -30,7 +31,8 @@ def new_store():
     if form_valid:
         store = GroceryStore(
             title=form.title.data,
-            address=form.address.data
+            address=form.address.data,
+            created_by=current_user
         )
         db.session.add(store)
         db.session.commit()
@@ -41,6 +43,7 @@ def new_store():
 
 
 @main.route('/new_item', methods=['GET', 'POST'])
+@login_required
 def new_item():
     form = GroceryItemForm()
     form_valid = form.validate_on_submit()
@@ -51,7 +54,8 @@ def new_item():
             price=form.price.data,
             category=form.category.data,
             photo_url=form.photo_url.data,
-            store=form.store.data
+            store=form.store.data,
+            created_by=current_user
         )
         db.session.add(item)
         db.session.commit()
@@ -62,6 +66,7 @@ def new_item():
 
 
 @main.route('/store/<store_id>', methods=['GET', 'POST'])
+@login_required
 def store_detail(store_id):
     store = GroceryStore.query.get(store_id)
     form = GroceryStoreForm(obj=store)
@@ -80,6 +85,7 @@ def store_detail(store_id):
 
 
 @main.route('/item/<item_id>', methods=['GET', 'POST'])
+@login_required
 def item_detail(item_id):
     item = GroceryItem.query.get(item_id)
     form = GroceryItemForm(obj=item)

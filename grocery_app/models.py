@@ -18,6 +18,8 @@ class GroceryStore(db.Model):
     title = db.Column(db.String(80), nullable=False)
     address = db.Column(db.String(200), nullable=False)
     items = db.relationship('GroceryItem', back_populates='store')
+    created_by_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    created_by = db.relationship('User')
 
     def __repr__(self):
       return f'{self.title}, address: {self.address}'
@@ -32,6 +34,14 @@ class GroceryItem(db.Model):
     store_id = db.Column(
         db.Integer, db.ForeignKey('grocery_store.id'), nullable=False)
     store = db.relationship('GroceryStore', back_populates='items')
+    created_by_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    created_by = db.relationship('User')
 
     def __repr__(self):
       return f'{self.name}, price: {self.price}'
+
+class User(db.model):
+  id = db.Column(db.Integer, primary_key=True)
+  username = db.Column(db.String(80), nullable=False, unique=True)
+  password = db.Column(db.String(128), nullable = False)
+

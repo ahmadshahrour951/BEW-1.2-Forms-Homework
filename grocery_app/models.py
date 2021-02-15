@@ -3,6 +3,8 @@ from sqlalchemy_utils import URLType
 from grocery_app import db
 from grocery_app.utils import FormEnum
 
+from flask_login import UserMixin
+
 class ItemCategory(FormEnum):
     """Categories of grocery items."""
     PRODUCE = 'Produce'
@@ -40,7 +42,8 @@ class GroceryItem(db.Model):
     def __repr__(self):
       return f'{self.name}, price: {self.price}'
 
-class User(db.model):
+
+class User(UserMixin, db.model):
   id = db.Column(db.Integer, primary_key=True)
   username = db.Column(db.String(80), nullable=False, unique=True)
   password = db.Column(db.String(128), nullable = False)

@@ -4,9 +4,7 @@ from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 import os
 
-from grocery_app.routes import main
 from grocery_app.config import Config
-from .models import User
 
 
 app = Flask(__name__)
@@ -19,15 +17,16 @@ login_manager = LoginManager()
 login_manager.login_view = 'auth.login'
 login_manager.init_app(app)
 
-
+from .models import User
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
 
-
 bcrypt = Bcrypt(app)
 
+from grocery_app.routes import auth, main
 app.register_blueprint(main)
+app.register_blueprint(auth)
 
 with app.app_context():
     db.create_all()
